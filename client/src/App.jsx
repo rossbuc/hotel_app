@@ -1,35 +1,42 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [bookings, setBookings] = useState([])
+
+  const fetchBookings = () => {
+    fetch('http://localhost:9000/api/bookings/')
+    .then((res) => res.json())
+    .then((data) => setBookings(data))
+  }
+
+  useEffect(() => {
+    fetchBookings()
+  }, [])
+
+  const bookingsGrid = bookings.map((booking) => {
+    console.log(booking)
+    return (
+      <div key={booking._id}>
+        <h2>{booking.guestName}</h2>
+        <h3>{booking.guestEmail}</h3>
+        <button>Check Out</button>
+        <button>Delete</button>
+      </div>
+    )
+  })
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Bookings List</h1>
+      {bookingsGrid}
     </>
+    
   )
+
 }
 
 export default App

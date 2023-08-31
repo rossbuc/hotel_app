@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const createRouter = require('./helpers/createRouter')
+const createRouter = require('./helpers/create_router')
 const MongoClient = require('mongodb')
 
 const app = express()
