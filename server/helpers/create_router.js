@@ -43,6 +43,19 @@ const createRouter = (collection) => {
             })
     })
 
+    router.put('/:id', (req, res) => {
+        const id = req.params.id
+        const newData = req.body
+        collection
+            .updateOne({ _id: ObjectID(id) }, { $set: newData })
+            .then((doc) => res.json(doc))
+            .catch((err) => {
+                console.error(err)
+                res.status(500)
+                res.json({ status: 500, error: err })
+            })
+    })
+
     return router
 }
 
