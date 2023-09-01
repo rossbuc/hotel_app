@@ -38,13 +38,22 @@ function App() {
     .then((data) => setBookings([...bookings, data]))
   }
 
+  const handleDelete = (id) => {
+    console.log(id)
+    fetch(`http://localhost:9000/api/bookings/${id}`, {
+      method: 'DELETE'
+    })
+    .then((res) => res.json())
+    .then(setBookings(bookings.filter((booking) => booking._id !== id)))
+  }
+
   const bookingsGrid = bookings.map((booking) => {
     return (
       <div key={booking._id}>
         <h2>{booking.guestName}</h2>
         <h3>{booking.guestEmail}</h3>
         <button>{booking.checkedIn ? "Check Out" : "Check In"}</button>
-        <button>Delete</button>
+        <button onClick={() => handleDelete(booking._id)}>Delete</button>
       </div>
     )
   })
