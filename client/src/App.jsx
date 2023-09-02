@@ -3,12 +3,19 @@ import './App.css'
 
 function App() {
 
+  const [events, setEvents] = useState([])
   const [bookings, setBookings] = useState([])
   const [formData, setFormData] = useState({
     guestName: "",
     guestEmail: "",
     checkedIn: null,
   })
+
+  // const watchChanges = async () => {
+  //   for await (const change of bookingsCollection.watch()) {
+  //     setEvents([...events, change])
+  //   }
+  // }
 
   const fetchBookings = () => {
     fetch('http://localhost:9000/api/bookings/')
@@ -18,6 +25,7 @@ function App() {
 
   useEffect(() => {
     fetchBookings()
+    // watchChanges()
   }, [])
 
   const handleFormChange = (e) => {
@@ -46,18 +54,23 @@ function App() {
     .then(setBookings(bookings.filter((booking) => booking._id !== id)))
   }
 
-  const handleCheckIn = (id) => {
+  const handleCheckIn = async (id) => {
     const bookingToCheckIn = bookings.find((booking) => booking._id === id)
     bookingToCheckIn.checkedIn ? bookingToCheckIn.checkedIn = false : bookingToCheckIn.checkedIn = true
     delete bookingToCheckIn._id
     console.log(bookingToCheckIn)
 
-    fetch(`http://localhost:9000/api/bookings/${id}`, {
+    await fetch(`http://localhost:9000/api/bookings/${id}`, {
       method: 'PUT',
       body: JSON.stringify(bookingToCheckIn),
       headers: { 'Content-Type' : 'application/json' }
     })
-    .then(fetchBookings())
+    // .then(setTimeout(fetchBookings(), 1000))
+
+    setTimeout(() => {
+      fetchBookings()
+      console.log("im fetching")
+    }, 50)
   }
 
   const bookingsGrid = bookings.map((booking) => {

@@ -7,6 +7,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+
 MongoClient.connect('mongodb://127.0.0.1:27017', { useUnifiedTopology: true })
     .then((client) => {
         const database = client.db('hotel')
