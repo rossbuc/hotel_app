@@ -46,26 +46,27 @@ function App() {
     .then(setBookings(bookings.filter((booking) => booking._id !== id)))
   }
 
-  const handleCheckIn = (id) => {
-    const bookingToCheckIn = bookings.find((booking) => booking._id === id)
-    bookingToCheckIn.checkedIn ? bookingToCheckIn.checkedIn = false : bookingToCheckIn.checkedIn = true
-    delete bookingToCheckIn._id
-    console.log(bookingToCheckIn)
+  const handleCheckIn = (booking) => {
+    booking.checkedIn ? booking.checkedIn = false : booking.checkedIn = true
+    console.log("This is the booking in the function")
+    console.log(booking)
 
-    fetch(`http://localhost:9000/api/bookings/${id}`, {
+    fetch(`http://localhost:9000/api/bookings/${booking._id}`, {
       method: 'PUT',
-      body: JSON.stringify(bookingToCheckIn),
+      body: JSON.stringify({...booking}),
       headers: { 'Content-Type' : 'application/json' }
     })
     .then(fetchBookings())
   }
 
   const bookingsGrid = bookings.map((booking) => {
+    console.log("This is the booking in the map")
+    console.log(booking)
     return (
       <div key={booking._id}>
         <h2>{booking.guestName}</h2>
         <h3>{booking.guestEmail}</h3>
-        <button onClick={() => handleCheckIn(booking._id)}>{booking.checkedIn ? "Check Out" : "Check In"}</button>
+        <button onClick={() => handleCheckIn(booking)}>{booking.checkedIn ? "Check Out" : "Check In"}</button>
         <button onClick={() => handleDelete(booking._id)}>Delete</button>
       </div>
     )
